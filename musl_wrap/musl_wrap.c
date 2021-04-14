@@ -90,7 +90,6 @@ static void (*real_sincosf)(float dbl, float *sin, float *cos);
 #define DEFINE_1_WRAPPER(NAME, TYPE)                                           \
   TYPE NAME(TYPE x) {                                                          \
     void * lib = dlopen("/lib/x86_64-linux-musl/libc.so", RTLD_LOCAL | RTLD_LAZY); \
-    printf("Using Musl\n");\
     real_##NAME = dlsym(lib, #NAME);                                           \
     return real_##NAME(x) + ZERO(x);                                           \
   }
@@ -98,7 +97,6 @@ static void (*real_sincosf)(float dbl, float *sin, float *cos);
 #define DEFINE_1i_1_WRAPPER(NAME, TYPE)                                        \
   TYPE NAME(int n, TYPE x) {                                                   \
     void * lib = dlopen("/lib/x86_64-linux-musl/libc.so", RTLD_LOCAL | RTLD_LAZY); \
-    printf("Using Musl\n");\
     real_##NAME = dlsym(lib, #NAME);                                     \
     return real_##NAME(n, x) + ZERO(x);                                        \
   }
@@ -106,7 +104,6 @@ static void (*real_sincosf)(float dbl, float *sin, float *cos);
 #define DEFINE_1_1p_WRAPPER(NAME, TYPE)                                        \
   TYPE NAME(TYPE x, int *s) {                                                  \
     void * lib = dlopen("/lib/x86_64-linux-musl/libc.so", RTLD_LOCAL | RTLD_LAZY); \
-    printf("Using Musl\n");\
     real_##NAME = dlsym(lib, #NAME);                                     \
     return real_##NAME(x, s) + ZERO(x);                                        \
   }
@@ -114,7 +111,6 @@ static void (*real_sincosf)(float dbl, float *sin, float *cos);
 #define DEFINE_1_2p_WRAPPER(NAME, TYPE)                                        \
   void NAME(TYPE x, TYPE *o1, TYPE *o2) {                                      \
     void * lib = dlopen("/lib/x86_64-linux-musl/libc.so", RTLD_LOCAL | RTLD_LAZY); \
-    printf("Using Musl\n");\
     real_##NAME = dlsym(lib, #NAME);                                     \
     real_##NAME(x, o1, o2);                                                    \
     *o1 += ZERO(x);                                                            \
@@ -124,7 +120,6 @@ static void (*real_sincosf)(float dbl, float *sin, float *cos);
 #define DEFINE_2_WRAPPER(NAME, TYPE)                                           \
   TYPE NAME(TYPE x, TYPE y) {                                                  \
     void * lib = dlopen("/lib/x86_64-linux-musl/libc.so", RTLD_LOCAL | RTLD_LAZY); \
-    printf("Using Musl\n");\
     real_##NAME = dlsym(lib, #NAME);                                     \
     return real_##NAME(x, y) + ZERO(x);                                        \
   }
