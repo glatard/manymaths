@@ -75,8 +75,4 @@ ENV PERL5LIB=$MNI_DIR/share/perl5 \
     MNI_DATAPATH=$MNI_DIR/data
 ENV PATH=$FREESURFER_HOME/bin:$FREESURFER_HOME/tktools:$MINC_BIN_DIR:$PATH
 
-# Install tracing tool(s)
-ADD musl_wrap /opt/musl_wrap
-RUN apt install make gcc -y && (cd /opt/musl_wrap && make clean && make)
-
 

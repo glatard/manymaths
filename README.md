@@ -12,3 +12,4 @@ Supported libraries and versions:
 * `musl-v1.1.24-1`
 * `openlibm-v0.7.0`
 * `openlibm-v0.7.5`
+* `intel-v2021.2.0`

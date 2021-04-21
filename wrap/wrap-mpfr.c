@@ -87,22 +87,47 @@ static void (*real_sincosf)(float dbl, float *sin, float *cos);
 
 #define ZERO(TYPE) _Generic(TYPE, float : 0.0f, double : 0.0)
 
-#define DEFINE_1_WRAPPER(NAME, TYPE)                                           \
+#define DEFINE_1_WRAPPER(NAME, TYPE, PREC, ABBRV)                                           \
   TYPE NAME(TYPE x) {                                                          \
-    void * lib = dlopen(LIB_PATH, RTLD_LOCAL | RTLD_LAZY); \
-    real_##NAME = dlsym(lib, #NAME);                                           \
-    return real_##NAME(x) + ZERO(x);                                           \
+    int inex;
+    mpfr_t yy;
+    TYPE ret;
+    mpfr_init2 (yy, PREC);
+    mpfr_set_##ABBRV (yy, x, MPFR_RNDN);
+    inex = MPFR_##NAME (yy, yy, MPFR_RNDN); /* for rounding to nearest */
+    mpfr_subnormalize (yy, inex, MPFR_RNDN);
+    ret = mpfr_get_##ABBRV (yy, MPFR_RNDN);
+    mpfr_clear (yy);
+    return ret;
   }
 
-#define DEFINE_1i_1_WRAPPER(NAME, TYPE)                                        \
+#define DEFINE_1i_1_WRAPPER(NAME, TYPE, PREC, ABBRV)                                        \
   TYPE NAME(int n, TYPE x) {                                                   \
-    void * lib = dlopen(LIB_PATH, RTLD_LOCAL | RTLD_LAZY); \
-    real_##NAME = dlsym(lib, #NAME);                                     \
-    return real_##NAME(n, x) + ZERO(x);                                        \
+    int inex;
+    mpfr_t yy;
+    TYPE ret;
+    mpfr_init2 (yy, PREC);
+    mpfr_set_##ABBRV (yy, x, MPFR_RNDN);
+    inex = MPFR_##NAME (yy, n, yy, MPFR_RNDN); /* for rounding to nearest */
+    mpfr_subnormalize (yy, inex, MPFR_RNDN);
+    ret = mpfr_get_##ABBRV (yy, MPFR_RNDN);
+    mpfr_clear (yy);
+    return ret;
   }
 
 #define DEFINE_1_1p_WRAPPER(NAME, TYPE)                                        \
   TYPE NAME(TYPE x, int *s) {                                                  \
+    int inex;
+    mpfr_t yy;
+    TYPE ret;
+    mpfr_init2 (yy, PREC);
+    mpfr_set_##ABBRV (yy, x, MPFR_RNDN);
+    inex = MPFR_##NAME (yy, s, yy, MPFR_RNDN); /* for rounding to nearest */
+    mpfr_subnormalize (yy, inex, MPFR_RNDN);
+    ret = mpfr_get_##ABBRV (yy, MPFR_RNDN);
+    mpfr_clear (yy);
+    return ret;
+    
     void * lib = dlopen(LIB_PATH, RTLD_LOCAL | RTLD_LAZY); \
     real_##NAME = dlsym(lib, #NAME);                                     \
     return real_##NAME(x, s) + ZERO(x);                                        \
@@ -110,6 +135,16 @@ static void (*real_sincosf)(float dbl, float *sin, float *cos);
 
 #define DEFINE_1_2p_WRAPPER(NAME, TYPE)                                        \
   void NAME(TYPE x, TYPE *o1, TYPE *o2) {                                      \
+    int inex;
+    mpfr_t yy;
+    TYPE ret;
+    mpfr_init2 (yy, PREC);
+    mpfr_set_##ABBRV (yy, x, MPFR_RNDN);
+    inex = MPFR_##NAME (yy, yy, o1, o2, MPFR_RNDN); /* for rounding to nearest */
+    mpfr_subnormalize (yy, inex, MPFR_RNDN);
+    ret = mpfr_get_##ABBRV (yy, MPFR_RNDN);
+    mpfr_clear (yy);
+
     void * lib = dlopen(LIB_PATH, RTLD_LOCAL | RTLD_LAZY); \
     real_##NAME = dlsym(lib, #NAME);                                     \
     real_##NAME(x, o1, o2);                                                    \
