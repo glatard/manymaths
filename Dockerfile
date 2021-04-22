@@ -12,10 +12,10 @@ RUN apt install -y git make gcc &&\
 # root@c7a6f9f5c196:/lib/x86_64-linux-musl# dpkg --listfiles libopenlibm3
 
 ADD wrap /opt/wrap
-RUN (cd /opt/wrap && make wrap LIB_PATH=/opt/opemlibm-v0.7.0/libopenlibm.so LIB_NAME=openlibm-v0.7.0 &&\
-     make wrap LIB_PATH=/opt/opemlibm-v0.7.5/libopenlibm.so LIB_NAME=openlibm-v0.7.5 &&\
+RUN (cd /opt/wrap && make wrap LIB_PATH=/opt/openlibm-v0.7.0/libopenlibm.so.3 LIB_NAME=openlibm-v0.7.0 &&\
+     make wrap LIB_PATH=/opt/openlibm-v0.7.5/libopenlibm.so.3 LIB_NAME=openlibm-v0.7.5 &&\
      MUSL_VERSION=$(dpkg -s musl | grep Version | awk '{print $NF}') && make wrap LIB_PATH=/lib/x86_64-linux-musl/libc.so LIB_NAME=musl-v${MUSL_VERSION} &&\
-     GLIBC_VERSION=$(/lib/x86_64-linux-gnu/libc.so.6 | grep "stable release version" | awk '{print $NF}') && GLIBC_VERSION=${GLIBC_VERSION%.} && make wrap LIB_PATH=/lib/x86_64-linux-gnu/libc.so.6 LIB_NAME=glibc-v${GLIBC_VERSION})
+     GLIBC_VERSION=$(/lib/x86_64-linux-gnu/libc.so.6 | grep "stable release version" | awk '{print $NF}') && GLIBC_VERSION=${GLIBC_VERSION%.} && make wrap LIB_PATH=/lib/x86_64-linux-gnu/libm.so.6 LIB_NAME=glibc-v${GLIBC_VERSION})
 
 # # Install tzdata non interactively (forces UTC time zone)
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata software-properties-common
@@ -30,6 +30,8 @@ RUN (cd /tmp && wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTE
 RUN (cd /opt/wrap && make wrap LIB_PATH=/opt/intel/oneapi/compiler/2021.2.0/linux/compiler/lib/intel64_lin/libimf.so LIB_NAME=intel-v2021.2.0)
 
 ADD preload.sh /bin/preload.sh
+
+ENV LD_LIBRARY_PATH=/opt/intel/oneapi/compiler/2021.2.0/linux/compiler/lib/intel64_lin
 
 ENTRYPOINT [ "/bin/preload.sh" ]
 

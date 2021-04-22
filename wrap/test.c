@@ -11,6 +11,8 @@ int main()
         printf("%0.55f\n",a);
         a = sin(x);
         printf("%0.55f\n",a);
+        a = log(x);
+        printf("%0.55f\n",a);
         printf("done\n");
         return 0;
 }

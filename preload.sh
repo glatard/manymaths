@@ -7,7 +7,7 @@ then
     BASE_DIR=/opt/wrap
     LIB_PATH=${BASE_DIR}/${LIB_NAME}_wrap.so
     test -f ${LIB_PATH} || (echo "ERROR: cannot find ${LIB_PATH}" && false)
-    export LD_PRELOAD=${LIB_PATH}
+    export LD_PRELOAD="${LIB_PATH} /usr/lib/x86_64-linux-gnu/libdl.so"
     echo "Preloaded ${LIB_PATH}"
 fi
 

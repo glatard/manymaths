@@ -9,6 +9,7 @@ RUN apt install -y python2 \
     tar \
     unzip \
     bc \
+    file \
     libglu1-mesa-dev \
     freeglut3-dev \
     mesa-common-dev \
@@ -19,7 +20,7 @@ RUN apt install -y python2 \
 RUN ln -s /usr/bin/python2.7 /usr/bin/python
 
 ADD ./fslinstaller.py /tmp/
-RUN (cd /tmp/ && python fslinstaller.py -d /usr/local/fsl)
+RUN (cd /tmp/ && python fslinstaller.py -D -d /usr/local/fsl)
 
 # Clone HCP pipelines
 RUN wget https://github.com/Washington-University/Pipelines/archive/v4.2.0.tar.gz -O pipelines.tar.gz &&\

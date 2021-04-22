@@ -1,6 +1,7 @@
 #define _GNU_SOURCE
 #include <dlfcn.h>
 #include <stdio.h>
+#include <stdlib.h>
 //#include <math.h>
 
 #define xstr(s) str(s)
@@ -83,34 +84,47 @@ static float (*real_lgammaf_r)(float dbl, int *signgamp);
 static void (*real_sincos)(double dbl, double *sin, double *cos);
 static void (*real_sincosf)(float dbl, float *sin, float *cos);
 
+// Utils
+
+void * openlib(char * lib_path)
+{
+    void * lib = dlopen(LIB_PATH, RTLD_LOCAL | RTLD_LAZY);
+    if(lib==NULL)
+    {
+      printf("Error during dlopen (%s): %s\n", LIB_PATH, dlerror());
+      exit(1);
+    }
+    return lib;
+}
+
 // Override
 
 #define ZERO(TYPE) _Generic(TYPE, float : 0.0f, double : 0.0)
 
 #define DEFINE_1_WRAPPER(NAME, TYPE)                                           \
   TYPE NAME(TYPE x) {                                                          \
-    void * lib = dlopen(LIB_PATH, RTLD_LOCAL | RTLD_LAZY); \
+    void * lib = openlib(LIB_PATH);                                            \
     real_##NAME = dlsym(lib, #NAME);                                           \
     return real_##NAME(x) + ZERO(x);                                           \
   }
 
 #define DEFINE_1i_1_WRAPPER(NAME, TYPE)                                        \
   TYPE NAME(int n, TYPE x) {                                                   \
-    void * lib = dlopen(LIB_PATH, RTLD_LOCAL | RTLD_LAZY); \
+    void * lib = openlib(LIB_PATH);                                            \
     real_##NAME = dlsym(lib, #NAME);                                     \
     return real_##NAME(n, x) + ZERO(x);                                        \
   }
 
 #define DEFINE_1_1p_WRAPPER(NAME, TYPE)                                        \
   TYPE NAME(TYPE x, int *s) {                                                  \
-    void * lib = dlopen(LIB_PATH, RTLD_LOCAL | RTLD_LAZY); \
+    void * lib = openlib(LIB_PATH);                                            \
     real_##NAME = dlsym(lib, #NAME);                                     \
     return real_##NAME(x, s) + ZERO(x);                                        \
   }
 
 #define DEFINE_1_2p_WRAPPER(NAME, TYPE)                                        \
   void NAME(TYPE x, TYPE *o1, TYPE *o2) {                                      \
-    void * lib = dlopen(LIB_PATH, RTLD_LOCAL | RTLD_LAZY); \
+    void * lib = openlib(LIB_PATH);                                            \
     real_##NAME = dlsym(lib, #NAME);                                     \
     real_##NAME(x, o1, o2);                                                    \
     *o1 += ZERO(x);                                                            \
@@ -119,7 +133,7 @@ static void (*real_sincosf)(float dbl, float *sin, float *cos);
 
 #define DEFINE_2_WRAPPER(NAME, TYPE)                                           \
   TYPE NAME(TYPE x, TYPE y) {                                                  \
-    void * lib = dlopen(LIB_PATH, RTLD_LOCAL | RTLD_LAZY); \
+    void * lib = openlib(LIB_PATH);                                            \
     real_##NAME = dlsym(lib, #NAME);                                     \
     return real_##NAME(x, y) + ZERO(x);                                        \
   }

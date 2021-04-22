@@ -8,14 +8,15 @@ do
     # Cleanup data dir
     \rm -Rf ${DATA_DIR}/${LIB}
     cp -Rf ${DATA_DIR}/orig ${DATA_DIR}/${LIB}
-
     # Write command to be executed in container
-    \rm -f run.sh
+    \rm -f ${DATA_DIR}/run-${LIB}.sh
+
 (cat <<SCRIPT
+    #!/usr/bin/env bash
     HOME=/usr/local/src PreFreeSurferPipelineBatch.sh --StudyFolder=${DATA_DIR}/${LIB} --Subject=101309 --runlocal
 SCRIPT
-) > run-${LIB}.sh
-
+) > ${DATA_DIR}/run-${LIB}.sh
+    chmod 755 ${DATA_DIR}/run-${LIB}.sh
     docker run --rm -e LIB_NAME="${LIB}" -v ${DATA_DIR}:${DATA_DIR} -w ${DATA_DIR}\
-                       pfs-manymaths ./run.sh &>run-${LIB}.log
+                       pfs-manymaths ${DATA_DIR}/run-${LIB}.sh &>${DATA_DIR}/run-${LIB}.log
 done
