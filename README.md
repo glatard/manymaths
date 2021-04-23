@@ -13,3 +13,10 @@ Supported libraries and versions:
 * `openlibm-v0.7.0`
 * `openlibm-v0.7.5`
 * `intel-v2021.2.0`
+
+## Experimentation with HCP pipelines
+
+Sanity checks:
+- Preloading of openlibm and openlibm wrapper give same results
+- Regular glibc execution and glibc wrapper give same results
+- `wrap/test.c` to be expanded
