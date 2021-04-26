@@ -28,12 +28,11 @@ ADD wrap /opt/wrap
 RUN (cd /opt/wrap && make wrap LIB_PATH=/opt/openlibm-v0.7.0/libopenlibm.so.3 LIB_NAME=openlibm-v0.7.0 &&\
      make wrap LIB_PATH=/opt/openlibm-v0.7.5/libopenlibm.so.3 LIB_NAME=openlibm-v0.7.5 &&\
      MUSL_VERSION=$(dpkg -s musl | grep Version | awk '{print $NF}') && make wrap LIB_PATH=/lib/x86_64-linux-musl/libc.so LIB_NAME=musl-v${MUSL_VERSION} &&\
-     GLIBC_VERSION=$(/lib/x86_64-linux-gnu/libc.so.6 | grep "stable release version" | awk '{print $NF}') && GLIBC_VERSION=${GLIBC_VERSION%.} && make wrap LIB_PATH=/lib/x86_64-linux-gnu/libm.so.6 LIB_NAME=glibc-v${GLIBC_VERSION} &\
+     GLIBC_VERSION=$(/lib/x86_64-linux-gnu/libc.so.6 | grep "stable release version" | awk '{print $NF}') && GLIBC_VERSION=${GLIBC_VERSION%.} && make wrap LIB_PATH=/lib/x86_64-linux-gnu/libm.so.6 LIB_NAME=glibc-v${GLIBC_VERSION} &&\
      make wrap LIB_PATH=/opt/intel/oneapi/compiler/2021.2.0/linux/compiler/lib/intel64_lin/libimf.so LIB_NAME=intel-v2021.2.0 &&\
      make wrap-mpfr)
 
 ADD preload.sh /bin/preload.sh
-
 
 ENTRYPOINT [ "/bin/preload.sh" ]
 
