@@ -1,2 +1,5 @@
 test: test.c
-	gcc test.c -lm -o test
+	gcc test.c -Wall -lm -o test
+
+clean:
+	rm -rf test
