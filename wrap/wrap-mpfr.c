@@ -6,9 +6,9 @@
 
 #define DEFINE_1_WRAPPER(WRAP_NAME, MPFR_NAME, TYPE, PREC, ABBRV)                           \
   TYPE WRAP_NAME(TYPE x) {                                                                  \
-    /* MPFR initialization, should be done only once */                                        \
+    /* MPFR initialization, should be done only once */                                     \
     mpfr_set_emin(-148);                                                                    \
-    mpfr_set_emax(128);                                                                         \
+    mpfr_set_emax(128);                                                                     \
     int inex;                                                                               \
     mpfr_t yy;                                                                              \
     TYPE ret;                                                                               \
@@ -21,45 +21,45 @@
     return ret;                                                                             \
   }
 
-#define DEFINE_1i_1_WRAPPER(WRAP_NAME, MPFR_NAME, TYPE, PREC, ABBRV)                                        \
-  TYPE WRAP_NAME(int n, TYPE x) {                                                                \
-    /* MPFR initialization, should be done only once */                                        \
+#define DEFINE_1i_1_WRAPPER(WRAP_NAME, MPFR_NAME, TYPE, PREC, ABBRV)                        \
+  TYPE WRAP_NAME(int n, TYPE x) {                                                           \
+    /* MPFR initialization, should be done only once */                                     \
     mpfr_set_emin(-148);                                                                    \
-    mpfr_set_emax(128);                                                                         \
+    mpfr_set_emax(128);                                                                     \
     int inex;                                                                               \
     mpfr_t yy;                                                                              \
     TYPE ret;                                                                               \
     mpfr_init2 (yy, PREC);                                                                  \
     mpfr_set_##ABBRV (yy, x, MPFR_RNDN);                                                    \
-    inex = mpfr_##MPFR_NAME (yy, n, yy, MPFR_RNDN); /* for rounding to nearest */                \
+    inex = mpfr_##MPFR_NAME (yy, n, yy, MPFR_RNDN); /* for rounding to nearest */           \
     mpfr_subnormalize (yy, inex, MPFR_RNDN);                                                \
     ret = mpfr_get_##ABBRV (yy, MPFR_RNDN);                                                 \
     mpfr_clear (yy);                                                                        \
     return ret;                                                                             \
   }
 
-#define DEFINE_1_1p_WRAPPER(WRAP_NAME, MPFR_NAME, TYPE, PREC, ABBRV)                                        \
-  TYPE WRAP_NAME(TYPE x, int *s) {                                                               \
-  /* MPFR initialization, should be done only once */                                        \
+#define DEFINE_1_1p_WRAPPER(WRAP_NAME, MPFR_NAME, TYPE, PREC, ABBRV)                        \
+  TYPE WRAP_NAME(TYPE x, int *s) {                                                          \
+  /* MPFR initialization, should be done only once */                                       \
     mpfr_set_emin(-148);                                                                    \
-    mpfr_set_emax(128);                                                                         \
+    mpfr_set_emax(128);                                                                     \
     int inex;                                                                               \
     mpfr_t yy;                                                                              \
     TYPE ret;                                                                               \
     mpfr_init2 (yy, PREC);                                                                  \
     mpfr_set_##ABBRV (yy, x, MPFR_RNDN);                                                    \
-    inex = mpfr_##MPFR_NAME (yy, s, yy, MPFR_RNDN); /* for rounding to nearest */                \
+    inex = mpfr_##MPFR_NAME (yy, s, yy, MPFR_RNDN); /* for rounding to nearest */           \
     mpfr_subnormalize (yy, inex, MPFR_RNDN);                                                \
     ret = mpfr_get_##ABBRV (yy, MPFR_RNDN);                                                 \
     mpfr_clear (yy);                                                                        \
     return ret;                                                                             \
   }
 
-#define DEFINE_2_WRAPPER(WRAP_NAME, MPFR_NAME, TYPE, PREC, ABBRV)                                           \
-  TYPE WRAP_NAME(TYPE x, TYPE y) {                                                               \
-    /* MPFR initialization, should be done only once */                                        \
+#define DEFINE_2_WRAPPER(WRAP_NAME, MPFR_NAME, TYPE, PREC, ABBRV)                           \
+  TYPE WRAP_NAME(TYPE x, TYPE y) {                                                          \
+    /* MPFR initialization, should be done only once */                                     \
     mpfr_set_emin(-148);                                                                    \
-    mpfr_set_emax(128);                                                                         \
+    mpfr_set_emax(128);                                                                     \
     int inex;                                                                               \
     mpfr_t yy;                                                                              \
     mpfr_t xx;                                                                              \
@@ -68,7 +68,7 @@
     mpfr_init2 (xx, PREC);                                                                  \
     mpfr_set_##ABBRV (xx, x, MPFR_RNDN);                                                    \
     mpfr_set_##ABBRV (yy, y, MPFR_RNDN);                                                    \
-    inex = mpfr_##MPFR_NAME (yy, xx, yy, MPFR_RNDN); /* for rounding to nearest */               \
+    inex = mpfr_##MPFR_NAME (yy, xx, yy, MPFR_RNDN); /* for rounding to nearest */          \
     mpfr_subnormalize (yy, inex, MPFR_RNDN);                                                \
     ret = mpfr_get_##ABBRV (yy, MPFR_RNDN);                                                 \
     mpfr_clear (yy);                                                                        \
@@ -76,25 +76,25 @@
     return ret;                                                                             \
   }
 
-#define DEFINE_SINCOS_WRAPPER(WRAP_NAME, TYPE, PREC, ABBRV)                                        \
-  void WRAP_NAME(TYPE x, TYPE *o1, TYPE *o2) {                                                   \
-    /* MPFR initialization, should be done only once */                                        \
+#define DEFINE_SINCOS_WRAPPER(WRAP_NAME, TYPE, PREC, ABBRV)                                 \
+  void WRAP_NAME(TYPE x, TYPE *o1, TYPE *o2) {                                              \
+    /* MPFR initialization, should be done only once */                                     \
     mpfr_set_emin(-148);                                                                    \
-    mpfr_set_emax(128);                                                                         \
+    mpfr_set_emax(128);                                                                     \
     int inex;                                                                               \
     mpfr_t yy, sop, cop;                                                                    \
     mpfr_init2 (yy, PREC);                                                                  \
-    mpfr_init2 (sop, PREC);                                                                  \
-    mpfr_init2 (cop, PREC);                                                                  \
+    mpfr_init2 (sop, PREC);                                                                 \
+    mpfr_init2 (cop, PREC);                                                                 \
     mpfr_set_##ABBRV (yy, x, MPFR_RNDN);                                                    \
-    inex = mpfr_sin_cos (sop, cop, yy, MPFR_RNDN); /* for rounding to nearest */             \
-    mpfr_subnormalize (sop, inex, MPFR_RNDN);                                                \
-    mpfr_subnormalize (cop, inex, MPFR_RNDN);                                                \
-    *o1 = mpfr_get_##ABBRV (sop, MPFR_RNDN);                                                 \
-    *o2 = mpfr_get_##ABBRV (cop, MPFR_RNDN);                                                 \
+    inex = mpfr_sin_cos (sop, cop, yy, MPFR_RNDN); /* for rounding to nearest */            \
+    mpfr_subnormalize (sop, inex, MPFR_RNDN);                                               \
+    mpfr_subnormalize (cop, inex, MPFR_RNDN);                                               \
+    *o1 = mpfr_get_##ABBRV (sop, MPFR_RNDN);                                                \
+    *o2 = mpfr_get_##ABBRV (cop, MPFR_RNDN);                                                \
     mpfr_clear (yy);                                                                        \
-    mpfr_clear (sop);                                                                        \
-    mpfr_clear (cop);                                                                        \
+    mpfr_clear (sop);                                                                       \
+    mpfr_clear (cop);                                                                       \
   }
 
 DEFINE_1_WRAPPER(sqrt, sqrt, double, 53, d);
@@ -215,4 +215,3 @@ float tgamma_f(float x)
   printf("tgamma is not available in wrap-mpfr.\n");
   exit(1);
 }
-
