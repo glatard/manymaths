@@ -1,16 +1,8 @@
 #define _GNU_SOURCE
-#include <dlfcn.h>
 #include <stdio.h>
 #include <mpfr.h>
 #include <stdlib.h>
 #include <math.h>
-
-#define xstr(s) str(s)
-#define str(s) #s
-
-// Override
-
-#define ZERO(TYPE) _Generic(TYPE, float : 0.0f, double : 0.0)
 
 #define DEFINE_1_WRAPPER(WRAP_NAME, MPFR_NAME, TYPE, PREC, ABBRV)                           \
   TYPE WRAP_NAME(TYPE x) {                                                                  \
@@ -65,7 +57,7 @@
 
 #define DEFINE_2_WRAPPER(WRAP_NAME, MPFR_NAME, TYPE, PREC, ABBRV)                                           \
   TYPE WRAP_NAME(TYPE x, TYPE y) {                                                               \
-  /* MPFR initialization, should be done only once */                                        \
+    /* MPFR initialization, should be done only once */                                        \
     mpfr_set_emin(-148);                                                                    \
     mpfr_set_emax(128);                                                                         \
     int inex;                                                                               \
@@ -86,7 +78,7 @@
 
 #define DEFINE_SINCOS_WRAPPER(WRAP_NAME, TYPE, PREC, ABBRV)                                        \
   void WRAP_NAME(TYPE x, TYPE *o1, TYPE *o2) {                                                   \
-  /* MPFR initialization, should be done only once */                                        \
+    /* MPFR initialization, should be done only once */                                        \
     mpfr_set_emin(-148);                                                                    \
     mpfr_set_emax(128);                                                                         \
     int inex;                                                                               \
