@@ -4,14 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define FLOAT_PREC 24
-#define FLOAT_EMIN -148
-#define FLOAT_EMAX 128
-
-#define DOUBLE_PREC 53
-#define DOUBLE_EMIN -1073
-#define DOUBLE_EMAX 1024
-
 #define BINARY128_PREC 112
 
 MPFR_DECL_INIT(mpfr_x, BINARY128_PREC);
@@ -57,7 +49,7 @@ MPFR_DECL_INIT(mpfr_y, BINARY128_PREC);
   TYPE NAME(TYPE x, TYPE y) {                                                  \
     MPFR_SET_FLT(x);                                                           \
     MPFR_SET_FLT(y);                                                           \
-    mpfr_##FUNCTION(mpfr_x, mpfr_y, mpfr_x, MPFR_RNDN);                        \
+    mpfr_##FUNCTION(mpfr_x, mpfr_x, mpfr_y, MPFR_RNDN);                        \
     typeof(x) ret = MPFR_GET_FLT(x);                                           \
     return ret;                                                                \
   }

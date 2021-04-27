@@ -2,7 +2,7 @@
 
 A Docker image to play with multiple libmaths implementations
 
-Example:
+Example usage:
 ```
 docker run -e LIB_NAME="musl-v1.1.24-1" --rm manymaths ls
 ```
