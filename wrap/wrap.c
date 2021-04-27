@@ -97,6 +97,16 @@ void * openlib(char * lib_path)
     return lib;
 }
 
+void * safe_dlsym(void * lib, char * name)
+{
+  void * func = dlsym(lib, name);
+  if(func == NULL)
+  {
+    printf("Cannot find symbol %s in library\n", name);
+    exit(1);
+  }
+}
+
 // Override
 
 #define ZERO(TYPE) _Generic(TYPE, float : 0.0f, double : 0.0)
@@ -104,28 +114,28 @@ void * openlib(char * lib_path)
 #define DEFINE_1_WRAPPER(NAME, TYPE)                                           \
   TYPE NAME(TYPE x) {                                                          \
     void * lib = openlib(LIB_PATH);                                            \
-    real_##NAME = dlsym(lib, #NAME);                                           \
+    real_##NAME = safe_dlsym(lib, #NAME);                                           \
     return real_##NAME(x) + ZERO(x);                                           \
   }
 
 #define DEFINE_1i_1_WRAPPER(NAME, TYPE)                                        \
   TYPE NAME(int n, TYPE x) {                                                   \
     void * lib = openlib(LIB_PATH);                                            \
-    real_##NAME = dlsym(lib, #NAME);                                     \
+    real_##NAME = safe_dlsym(lib, #NAME);                                     \
     return real_##NAME(n, x) + ZERO(x);                                        \
   }
 
 #define DEFINE_1_1p_WRAPPER(NAME, TYPE)                                        \
   TYPE NAME(TYPE x, int *s) {                                                  \
     void * lib = openlib(LIB_PATH);                                            \
-    real_##NAME = dlsym(lib, #NAME);                                     \
+    real_##NAME = safe_dlsym(lib, #NAME);                                     \
     return real_##NAME(x, s) + ZERO(x);                                        \
   }
 
 #define DEFINE_1_2p_WRAPPER(NAME, TYPE)                                        \
   void NAME(TYPE x, TYPE *o1, TYPE *o2) {                                      \
     void * lib = openlib(LIB_PATH);                                            \
-    real_##NAME = dlsym(lib, #NAME);                                     \
+    real_##NAME = safe_dlsym(lib, #NAME);                                     \
     real_##NAME(x, o1, o2);                                                    \
     *o1 += ZERO(x);                                                            \
     *o2 += ZERO(x);                                                            \
@@ -134,7 +144,7 @@ void * openlib(char * lib_path)
 #define DEFINE_2_WRAPPER(NAME, TYPE)                                           \
   TYPE NAME(TYPE x, TYPE y) {                                                  \
     void * lib = openlib(LIB_PATH);                                            \
-    real_##NAME = dlsym(lib, #NAME);                                     \
+    real_##NAME = safe_dlsym(lib, #NAME);                                     \
     return real_##NAME(x, y) + ZERO(x);                                        \
   }
 

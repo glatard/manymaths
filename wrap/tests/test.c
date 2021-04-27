@@ -35,8 +35,9 @@ void test(double x) {
   printf("expf(%13a)=%13a\n", x, expf(x));
   printf("pow(%13a, %13a) =%13a\n", x, x, pow(x, x));
   printf("powf(%13a, %13a)=%13a\n", x, x, powf(x, x));
-  printf("exp10(%13a) =%13a\n", x, exp10(x));
-  printf("exp10f(%13a)=%13a\n", x, exp10f(x));
+  // exp10 isn't in openlibm so we don't test it
+//   printf("exp10(%13a) =%13a\n", x, exp10(x));
+//   printf("exp10f(%13a)=%13a\n", x, exp10f(x));
   printf("exp2(%13a) =%13a\n", x, exp2(x));
   printf("exp2f(%13a)=%13a\n", x, exp2f(x));
   printf("expm1(%13a) =%13a\n", x, expm1(x));
