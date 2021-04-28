@@ -5,14 +5,7 @@
 #include <stdlib.h>
 
 #define FLOAT_PREC 24
-#define FLOAT_EMIN -148
-#define FLOAT_EMAX 128
-
 #define DOUBLE_PREC 53
-#define DOUBLE_EMIN -1073
-#define DOUBLE_EMAX 1024
-
-#define BINARY128_PREC 113
 
 #define MPFR_SET_FLT(X)                                                        \
   _Generic((X), float                                                          \
@@ -64,7 +57,7 @@
     MPFR_DECL_INIT(mpfr_y, GET_PREC(y));                                       \
     MPFR_SET_FLT(x);                                                           \
     MPFR_SET_FLT(y);                                                           \
-    int inex = mpfr_##FUNCTION(mpfr_x, mpfr_y, mpfr_x, MPFR_RNDN);             \
+    int inex = mpfr_##FUNCTION(mpfr_x, mpfr_x, mpfr_y, MPFR_RNDN);             \
     mpfr_subnormalize(mpfr_x, inex, MPFR_RNDN);                                \
     typeof(x) ret = MPFR_GET_FLT(x);                                           \
     return ret;                                                                \

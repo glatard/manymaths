@@ -7,8 +7,8 @@ void test(double x) {
   printf("sqrtf(%13a)=%13a\n", x, sqrtf(x));
   printf("cbrt(%13a) =%13a\n", x, cbrt(x));
   printf("cbrtf(%13a)=%13a\n", x, cbrtf(x));
-  printf("hypot(%13a, %13a) =%13a\n", x, x, hypot(x, x));
-  printf("hypotf(%13a, %13a)=%13a\n", x, x, hypotf(x, x));
+  printf("hypot(%13a, %13a) =%13a\n", x, 1+x, hypot(x, 1+x));
+  printf("hypotf(%13a, %13a)=%13a\n", x, 1+x, hypotf(x, 1+x));
   printf("log(%13a) =%13a\n", x, log(x));
   printf("logf(%13a)=%13a\n", x, logf(x));
   printf("log10(%13a) =%13a\n", x, log10(x));
@@ -29,14 +29,15 @@ void test(double x) {
   printf("atanf(%13a)=%13a\n", x, atanf(x));
   printf("atanh(%13a) =%13a\n", x, atanh(x));
   printf("atanhf(%13a)=%13a\n", x, atanhf(x));
-  printf("atan2(%13a, %13a) =%13a\n", x, x, atan2(x, x));
-  printf("atan2f(%13a, %13a)=%13a\n", x, x, atan2f(x, x));
+  printf("atan2(%13a, %13a) =%13a\n", x, 1+x, atan2(x, 1+x));
+  printf("atan2f(%13a, %13a)=%13a\n", x, 1+x, atan2f(x, 1+x));
   printf("exp(%13a) =%13a\n", x, exp(x));
   printf("expf(%13a)=%13a\n", x, expf(x));
-  printf("pow(%13a, %13a) =%13a\n", x, x, pow(x, x));
-  printf("powf(%13a, %13a)=%13a\n", x, x, powf(x, x));
-  printf("exp10(%13a) =%13a\n", x, exp10(x));
-  printf("exp10f(%13a)=%13a\n", x, exp10f(x));
+  printf("pow(%13a, %13a) =%13a\n", x, 1+x, pow(x, 1+x));
+  printf("powf(%13a, %13a)=%13a\n", x, 1+x, powf(x, 1+x));
+  // exp10 isn't in openlibm so we don't test it
+//   printf("exp10(%13a) =%13a\n", x, exp10(x));
+//   printf("exp10f(%13a)=%13a\n", x, exp10f(x));
   printf("exp2(%13a) =%13a\n", x, exp2(x));
   printf("exp2f(%13a)=%13a\n", x, exp2f(x));
   printf("expm1(%13a) =%13a\n", x, expm1(x));
