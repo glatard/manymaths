@@ -4,10 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define BINARY128_PREC 112
-
-MPFR_DECL_INIT(mpfr_x, BINARY128_PREC);
-MPFR_DECL_INIT(mpfr_y, BINARY128_PREC);
+#define FLOAT_PREC 24
+#define DOUBLE_PREC 53
 
 #define MPFR_SET_FLT(X)                                                        \
   _Generic((X), float                                                          \
@@ -21,45 +19,59 @@ MPFR_DECL_INIT(mpfr_y, BINARY128_PREC);
            : mpfr_get_flt(mpfr_##X, MPFR_RNDN), double* \
            : mpfr_get_d(mpfr_##X, MPFR_RNDN))
 
+#define GET_PREC(X) _Generic((X), float : FLOAT_PREC, double : DOUBLE_PREC)
+
 #define DEFINE_1_WRAPPER(NAME, TYPE, FUNCTION)                                 \
   TYPE NAME(TYPE x) {                                                          \
+    MPFR_DECL_INIT(mpfr_x, GET_PREC(x));                                       \
     MPFR_SET_FLT(x);                                                           \
-    mpfr_##FUNCTION(mpfr_x, mpfr_x, MPFR_RNDN);                                \
+    int inex = mpfr_##FUNCTION(mpfr_x, mpfr_x, MPFR_RNDN);                     \
+    mpfr_subnormalize(mpfr_x, inex, MPFR_RNDN);                                \
     typeof(x) ret = MPFR_GET_FLT(x);                                           \
     return ret;                                                                \
   }
 
 #define DEFINE_1i_1_WRAPPER(NAME, TYPE, FUNCTION)                              \
   TYPE NAME(int n, TYPE x) {                                                   \
+    MPFR_DECL_INIT(mpfr_x, GET_PREC(x));                                       \
     MPFR_SET_FLT(x);                                                           \
-    mpfr_##FUNCTION(mpfr_x, n, mpfr_x, MPFR_RNDN);                             \
+    int inex = mpfr_##FUNCTION(mpfr_x, n, mpfr_x, MPFR_RNDN);                  \
+    mpfr_subnormalize(mpfr_x, inex, MPFR_RNDN);                                \
     typeof(x) ret = MPFR_GET_FLT(x);                                           \
     return ret;                                                                \
   }
 
 #define DEFINE_1_1p_WRAPPER(NAME, TYPE, FUNCTION)                              \
   TYPE NAME(TYPE x, int *s) {                                                  \
+    MPFR_DECL_INIT(mpfr_x, GET_PREC(x));                                       \
     MPFR_SET_FLT(x);                                                           \
-    mpfr_##FUNCTION(mpfr_x, s, mpfr_x, MPFR_RNDN);                             \
+    int inex = mpfr_##FUNCTION(mpfr_x, s, mpfr_x, MPFR_RNDN);                  \
+    mpfr_subnormalize(mpfr_x, inex, MPFR_RNDN);                                \
     typeof(x) ret = MPFR_GET_FLT(x);                                           \
     return ret;                                                                \
   }
 
 #define DEFINE_2_WRAPPER(NAME, TYPE, FUNCTION)                                 \
   TYPE NAME(TYPE x, TYPE y) {                                                  \
+    MPFR_DECL_INIT(mpfr_x, GET_PREC(x));                                       \
+    MPFR_DECL_INIT(mpfr_y, GET_PREC(y));                                       \
     MPFR_SET_FLT(x);                                                           \
     MPFR_SET_FLT(y);                                                           \
-    mpfr_##FUNCTION(mpfr_x, mpfr_x, mpfr_y, MPFR_RNDN);                        \
+    int inex = mpfr_##FUNCTION(mpfr_x, mpfr_x, mpfr_y, MPFR_RNDN);             \
+    mpfr_subnormalize(mpfr_x, inex, MPFR_RNDN);                                \
     typeof(x) ret = MPFR_GET_FLT(x);                                           \
     return ret;                                                                \
   }
 
 #define DEFINE_SINCOS_WRAPPER(NAME, TYPE)                                      \
   void NAME(TYPE x, TYPE *o1, TYPE *o2) {                                      \
-    MPFR_DECL_INIT(mpfr_o1, BINARY128_PREC);                                   \
-    MPFR_DECL_INIT(mpfr_o2, BINARY128_PREC);                                   \
+    MPFR_DECL_INIT(mpfr_x, GET_PREC(x));                                       \
+    MPFR_DECL_INIT(mpfr_o1, GET_PREC(x));                                      \
+    MPFR_DECL_INIT(mpfr_o2, GET_PREC(x));                                      \
     MPFR_SET_FLT(x);                                                           \
-    mpfr_sin_cos(mpfr_o1, mpfr_o2, mpfr_x, MPFR_RNDN);                         \
+    int inex = mpfr_sin_cos(mpfr_o1, mpfr_o2, mpfr_x, MPFR_RNDN);              \
+    mpfr_subnormalize(mpfr_o1, inex, MPFR_RNDN);                               \
+    mpfr_subnormalize(mpfr_o2, inex, MPFR_RNDN);                               \
     *o1 = MPFR_GET_FLT(o1);                                                    \
     *o2 = MPFR_GET_FLT(o2);                                                    \
   }
@@ -157,8 +169,8 @@ DEFINE_1_1p_WRAPPER(lgammaf_r, float, lgamma);
 DEFINE_SINCOS_WRAPPER(sincos, double);
 DEFINE_SINCOS_WRAPPER(sincosf, float);
 
-DEFINE_1_WRAPPER(tgamma, double, gamma);
-DEFINE_1_WRAPPER(tgammaf, float, gamma);
-
 DEFINE_1_WRAPPER(lgamma, double, lngamma);
 DEFINE_1_WRAPPER(lgammaf, float, lngamma);
+
+DEFINE_1_WRAPPER(tgamma, double, gamma);
+DEFINE_1_WRAPPER(tgammaf, float, gamma);
