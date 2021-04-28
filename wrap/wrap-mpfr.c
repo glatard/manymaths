@@ -157,20 +157,8 @@ DEFINE_1_1p_WRAPPER(lgammaf_r, float, lgamma);
 DEFINE_SINCOS_WRAPPER(sincos, double);
 DEFINE_SINCOS_WRAPPER(sincosf, float);
 
-// Handle glibc's lgamma separately as it's not available in MPFR
+DEFINE_1_WRAPPER(tgamma, double, gamma);
+DEFINE_1_WRAPPER(tgammaf, float, gamma);
 
-double lgamma(double x) { return lgamma_r(x, &signgam); }
-
-float lgammaf(float x) { return lgammaf_r(x, &signgam); }
-
-// tgamma doesn't seem to be available in MPFR
-
-double tgamma(double x) {
-  printf("tgamma is not available in wrap-mpfr.\n");
-  exit(1);
-}
-
-float tgamma_f(float x) {
-  printf("tgamma is not available in wrap-mpfr.\n");
-  exit(1);
-}
+DEFINE_1_WRAPPER(lgamma, double, lngamma);
+DEFINE_1_WRAPPER(lgammaf, float, lngamma);

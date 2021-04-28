@@ -57,4 +57,5 @@ lgamma_r(0x1.f9add3739635fp-4) =0x1.04270fc7f527ap+1
 lgammaf_r(0x1.f9add3739635fp-4)= 0x1.04271p+1
 sincos(0x1.f9add3739635fp-4) =0x1.f8653acecff98p-4,0x1.fc1a655cf4602p-1
 sincosf(0x1.f9add3739635fp-4)=0x1.f8653cp-4,0x1.fc1a66p-1
-tgamma is not available in wrap-mpfr.
+tgamma(0x1.f9add3739635fp-4) =0x1.e87e3583fdc92p+2
+tgammaf(0x1.f9add3739635fp-4)=0x1.e87e34p+2
