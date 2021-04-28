@@ -28,6 +28,8 @@
     int inex = mpfr_##FUNCTION(mpfr_x, mpfr_x, MPFR_RNDN);                     \
     mpfr_subnormalize(mpfr_x, inex, MPFR_RNDN);                                \
     typeof(x) ret = MPFR_GET_FLT(x);                                           \
+    if(DEBUG)                                                                  \
+      printf("[WRAP] %s %13a %13a\n", #NAME, x, ret);                          \
     return ret;                                                                \
   }
 
@@ -38,6 +40,8 @@
     int inex = mpfr_##FUNCTION(mpfr_x, n, mpfr_x, MPFR_RNDN);                  \
     mpfr_subnormalize(mpfr_x, inex, MPFR_RNDN);                                \
     typeof(x) ret = MPFR_GET_FLT(x);                                           \
+    if(DEBUG)                                                                  \
+      printf("[WRAP] %s %13a %d %13a\n", #NAME, x, n, ret);                    \
     return ret;                                                                \
   }
 
@@ -48,6 +52,8 @@
     int inex = mpfr_##FUNCTION(mpfr_x, s, mpfr_x, MPFR_RNDN);                  \
     mpfr_subnormalize(mpfr_x, inex, MPFR_RNDN);                                \
     typeof(x) ret = MPFR_GET_FLT(x);                                           \
+    if(DEBUG)                                                                  \
+      printf("[WRAP] %s %13a %d %13a\n", #NAME, x, *s, ret);                   \
     return ret;                                                                \
   }
 
@@ -60,6 +66,8 @@
     int inex = mpfr_##FUNCTION(mpfr_x, mpfr_x, mpfr_y, MPFR_RNDN);             \
     mpfr_subnormalize(mpfr_x, inex, MPFR_RNDN);                                \
     typeof(x) ret = MPFR_GET_FLT(x);                                           \
+    if(DEBUG)                                                                  \
+      printf("[WRAP] %s %13a %13a %13a\n", #NAME, x, y, ret);                  \
     return ret;                                                                \
   }
 
@@ -74,6 +82,8 @@
     mpfr_subnormalize(mpfr_o2, inex, MPFR_RNDN);                               \
     *o1 = MPFR_GET_FLT(o1);                                                    \
     *o2 = MPFR_GET_FLT(o2);                                                    \
+    if(DEBUG)                                                                  \
+      printf("[WRAP] %s %13a %13a %13a\n", #NAME, x, *o1, *o2);                \
   }
 
 DEFINE_1_WRAPPER(sqrtf, float, sqrt);

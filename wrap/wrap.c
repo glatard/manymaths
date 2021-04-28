@@ -2,7 +2,7 @@
 #include <dlfcn.h>
 #include <stdio.h>
 #include <stdlib.h>
-//#include <math.h>
+#include <stdarg.h>
 
 #define xstr(s) str(s)
 #define str(s) #s
@@ -114,38 +114,50 @@ void * safe_dlsym(void * lib, char * name)
 #define DEFINE_1_WRAPPER(NAME, TYPE)                                           \
   TYPE NAME(TYPE x) {                                                          \
     void * lib = openlib(LIB_PATH);                                            \
-    real_##NAME = safe_dlsym(lib, #NAME);                                           \
-    return real_##NAME(x) + ZERO(x);                                           \
+    real_##NAME = safe_dlsym(lib, #NAME);                                      \
+    TYPE ret = real_##NAME(x) + ZERO(x);                                       \
+    if(DEBUG)                                                                  \
+      printf("[WRAP] %s %13a %13a\n", #NAME, x, ret);                          \
+    return ret;                                                                \
   }
 
 #define DEFINE_1i_1_WRAPPER(NAME, TYPE)                                        \
   TYPE NAME(int n, TYPE x) {                                                   \
     void * lib = openlib(LIB_PATH);                                            \
-    real_##NAME = safe_dlsym(lib, #NAME);                                     \
-    return real_##NAME(n, x) + ZERO(x);                                        \
+    real_##NAME = safe_dlsym(lib, #NAME);                                      \
+    TYPE ret = real_##NAME(n, x) + ZERO(x);                                    \
+    if(DEBUG)                                                                  \
+      printf("[WRAP] %s %13a %d %13a\n", #NAME, x, n, ret);                    \
   }
 
 #define DEFINE_1_1p_WRAPPER(NAME, TYPE)                                        \
   TYPE NAME(TYPE x, int *s) {                                                  \
     void * lib = openlib(LIB_PATH);                                            \
-    real_##NAME = safe_dlsym(lib, #NAME);                                     \
-    return real_##NAME(x, s) + ZERO(x);                                        \
+    real_##NAME = safe_dlsym(lib, #NAME);                                      \
+    TYPE ret = real_##NAME(x, s) + ZERO(x);                                    \
+    if(DEBUG)                                                                  \
+      printf("[WRAP] %s %13a %d %13a\n", #NAME, x, *s, ret);                   \
   }
 
 #define DEFINE_1_2p_WRAPPER(NAME, TYPE)                                        \
   void NAME(TYPE x, TYPE *o1, TYPE *o2) {                                      \
     void * lib = openlib(LIB_PATH);                                            \
-    real_##NAME = safe_dlsym(lib, #NAME);                                     \
+    real_##NAME = safe_dlsym(lib, #NAME);                                      \
     real_##NAME(x, o1, o2);                                                    \
     *o1 += ZERO(x);                                                            \
     *o2 += ZERO(x);                                                            \
+    if(DEBUG)                                                                  \
+      printf("[WRAP] %s %13a %13a %13a\n", #NAME, x, *o1, *o2);                \
   }
 
 #define DEFINE_2_WRAPPER(NAME, TYPE)                                           \
   TYPE NAME(TYPE x, TYPE y) {                                                  \
     void * lib = openlib(LIB_PATH);                                            \
-    real_##NAME = safe_dlsym(lib, #NAME);                                     \
-    return real_##NAME(x, y) + ZERO(x);                                        \
+    real_##NAME = safe_dlsym(lib, #NAME);                                      \
+    TYPE ret = real_##NAME(x, y) + ZERO(x);                                    \
+    if(DEBUG)                                                                  \
+      printf("[WRAP] %s %13a %13a %13a\n", #NAME, x, y, ret);                  \
+    return ret;                                                                \
   }
 
 DEFINE_1_WRAPPER(sqrt, double);
