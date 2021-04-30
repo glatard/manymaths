@@ -5,7 +5,12 @@
 #include <stdlib.h>
 
 #define FLOAT_PREC 24
+#define FLOAT_EMIN -148
+#define FLOAT_EMAX 128
+
 #define DOUBLE_PREC 53
+#define DOUBLE_EMIN -1073
+#define DOUBLE_EMAX 1024
 
 #define MPFR_SET_FLT(X)                                                        \
   _Generic((X), float                                                          \
@@ -20,9 +25,13 @@
            : mpfr_get_d(mpfr_##X, MPFR_RNDN))
 
 #define GET_PREC(X) _Generic((X), float : FLOAT_PREC, double : DOUBLE_PREC)
+#define GET_EMIN(X) _Generic((X), float : FLOAT_EMIN, double : DOUBLE_EMIN)
+#define GET_EMAX(X) _Generic((X), float : FLOAT_EMAX, double : DOUBLE_EMAX)
 
 #define DEFINE_1_WRAPPER(NAME, TYPE, FUNCTION)                                 \
   TYPE NAME(TYPE x) {                                                          \
+    mpfr_set_emin(GET_EMIN(x));                                                \
+    mpfr_set_emax(GET_EMAX(x));                                                \
     MPFR_DECL_INIT(mpfr_x, GET_PREC(x));                                       \
     MPFR_SET_FLT(x);                                                           \
     int inex = mpfr_##FUNCTION(mpfr_x, mpfr_x, MPFR_RNDN);                     \
@@ -35,6 +44,8 @@
 
 #define DEFINE_1i_1_WRAPPER(NAME, TYPE, FUNCTION)                              \
   TYPE NAME(int n, TYPE x) {                                                   \
+    mpfr_set_emin(GET_EMIN(x));                                                \
+    mpfr_set_emax(GET_EMAX(x));                                                \
     MPFR_DECL_INIT(mpfr_x, GET_PREC(x));                                       \
     MPFR_SET_FLT(x);                                                           \
     int inex = mpfr_##FUNCTION(mpfr_x, n, mpfr_x, MPFR_RNDN);                  \
@@ -47,6 +58,8 @@
 
 #define DEFINE_1_1p_WRAPPER(NAME, TYPE, FUNCTION)                              \
   TYPE NAME(TYPE x, int *s) {                                                  \
+    mpfr_set_emin(GET_EMIN(x));                                                \
+    mpfr_set_emax(GET_EMAX(x));                                                \
     MPFR_DECL_INIT(mpfr_x, GET_PREC(x));                                       \
     MPFR_SET_FLT(x);                                                           \
     int inex = mpfr_##FUNCTION(mpfr_x, s, mpfr_x, MPFR_RNDN);                  \
@@ -59,6 +72,8 @@
 
 #define DEFINE_2_WRAPPER(NAME, TYPE, FUNCTION)                                 \
   TYPE NAME(TYPE x, TYPE y) {                                                  \
+    mpfr_set_emin(GET_EMIN(x));                                                \
+    mpfr_set_emax(GET_EMAX(x));                                                \
     MPFR_DECL_INIT(mpfr_x, GET_PREC(x));                                       \
     MPFR_DECL_INIT(mpfr_y, GET_PREC(y));                                       \
     MPFR_SET_FLT(x);                                                           \
@@ -73,13 +88,18 @@
 
 #define DEFINE_SINCOS_WRAPPER(NAME, TYPE)                                      \
   void NAME(TYPE x, TYPE *o1, TYPE *o2) {                                      \
+    mpfr_set_emin(GET_EMIN(x));                                                \
+    mpfr_set_emax(GET_EMAX(x));                                                \
     MPFR_DECL_INIT(mpfr_x, GET_PREC(x));                                       \
     MPFR_DECL_INIT(mpfr_o1, GET_PREC(x));                                      \
     MPFR_DECL_INIT(mpfr_o2, GET_PREC(x));                                      \
     MPFR_SET_FLT(x);                                                           \
     int inex = mpfr_sin_cos(mpfr_o1, mpfr_o2, mpfr_x, MPFR_RNDN);              \
-    mpfr_subnormalize(mpfr_o1, inex, MPFR_RNDN);                               \
-    mpfr_subnormalize(mpfr_o2, inex, MPFR_RNDN);                               \
+    int s = inex % 4, c = inex / 4;                                            \
+    int inex1 = (s == 0) ? 0 : (s == 1) ? 1 : -1;                              \
+    int inex2 = (c == 0) ? 0 : (c == 1) ? 1 : -1;                              \
+    mpfr_subnormalize(mpfr_o1, inex1, MPFR_RNDN);                              \
+    mpfr_subnormalize(mpfr_o2, inex2, MPFR_RNDN);                              \
     *o1 = MPFR_GET_FLT(o1);                                                    \
     *o2 = MPFR_GET_FLT(o2);                                                    \
     if(DEBUG)                                                                  \
