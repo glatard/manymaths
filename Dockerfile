@@ -32,6 +32,8 @@ RUN (cd /opt/wrap && make wrap LIB_PATH=/opt/openlibm-v0.7.0/libopenlibm.so.3 LI
      make wrap LIB_PATH=/opt/intel/oneapi/compiler/2021.2.0/linux/compiler/lib/intel64_lin/libimf.so LIB_NAME=intel-v2021.2.0 &&\
      make wrap-mpfr)
 
+RUN (cd /opt/wrap && GLIBC_VERSION=$(/lib/x86_64-linux-gnu/libc.so.6 | grep "stable release version" | awk '{print $NF}') && GLIBC_VERSION=${GLIBC_VERSION%.} && make wrap-doubled LIB_PATH=/lib/x86_64-linux-gnu/libm.so.6 LIB_NAME=glibc-v${GLIBC_VERSION})
+
 ADD preload.sh /bin/preload.sh
 
 ENTRYPOINT [ "/bin/preload.sh" ]
